@@ -1,0 +1,42 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+
+  <div class="details content">
+    <h2><%= blog.title %></h2>
+    <div class="content">
+      <p><%= blog.body %></p>
+      <p><%= blog.author%></p>
+    </div>
+    <%if(user && user.googleID == blog.googleID) {%>
+    <form action="/blogs/edit/<%= blog._id %>" method="get">
+      <a class="editButton" data-doc="<%= blog._id %>">
+        <button class = "edit">EDIT</button>
+      </a>
+    </form>
+    <a class="delete" data-doc="<%= blog._id %>">
+      <img src="/trashcan.svg" alt = "delete icon">
+    </a>
+    <% } %>
+  </div>
+
+  <%- include("./partials/footer.ejs") %>
+
+  <script>
+    const trashcan = document.querySelector('a.delete');
+
+    trashcan.addEventListener('click', (e) => {
+      const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+      fetch(endpoint, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => window.location.href = data.redirect)
+      .catch(err => console.log(err));
+    });
+  </script>
+</body>
+</html>

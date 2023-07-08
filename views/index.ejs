@@ -1,0 +1,41 @@
+<html lang="en">
+
+<!-- = isiliye use nahi kiya, because ye special characters exclude  -->
+<!-- krdeta hai, aur - nahi krta -->
+<%- include('./partials/head.ejs') %>
+
+<body>
+
+    <%- include('./partials/nav.ejs') %>
+    <div class="blogs-content">
+        <h2>All Blogs</h2>
+
+
+        <!-- jaha html shuru ho vaha ejs tags band krdo  -->
+        <!-- js ejs tags ke andar hi likhenge -->
+        <% if (blogs.length > 0) { 
+            blogs.forEach(blog => { %>
+            <div class="blogs"><a class = "single" href="/blogs/<%= blog._id%>">
+              <%if(user && user.googleID == blog.googleID) {%>
+              <h3 class="title"><%= blog.title %> By: YOU</span></h3>
+              <% } else{%>
+              <h3 class="title"><%= blog.title %> By: <span><%= blog.author %></span></h3>
+              <% } %>
+              <p class="snippet"><%= blog.snippet %></p>
+              <p><span class="article-list__date"><%= blog.createdAt.toDateString() %></span></p>
+            </a>
+            </div>
+            <% }) %>
+          <% } else { %>
+            <div class = "empty">
+              <p>There are no blogs to display.</p>
+              <p><br>Click<a href="/blogs/create"> here </a>to add a new blog. </p>
+            </div>
+          <% } %>
+    </div>
+
+    <%- include('./partials/footer.ejs') %>
+
+  </body>
+
+</html>
