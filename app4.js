@@ -62,9 +62,9 @@ app.get('/about', (req, res) => {
     res.render('about', { title: 'About', user:req.user });
 });
 
-app.get('/profile', (req, res) => {
-    res.render('profile', {title:'profile', user: req.user});
-});
+// app.get('/profile', (req, res) => {
+//     res.render('profile', {title:'Profile', user: req.user});
+// });
 
 //routes
 app.use('/blogs', blogRoutes);
