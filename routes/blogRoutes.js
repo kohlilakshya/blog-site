@@ -1,6 +1,5 @@
-const express = require('express');
+const router = require('express').Router();
 const Blog = require('../models/blog');
-const router = express.Router();
 
 //code runs from top to bottom
 router.get('/create', (req, res) => {
@@ -8,7 +7,7 @@ router.get('/create', (req, res) => {
 })
 
 router.get('/',(req,res)=>{
-    Blog.find().sort({createdAt:-1})
+    Blog.find().sort({updatedAt:-1})
         .then((result)=>{
             res.render('index', {user:req.user, title: 'All Blogs', blogs: result})
         })
@@ -62,10 +61,10 @@ router.get('/edit/:id', async (req,res)=>{
     res.render('edit', {blog:blog, title:'EDIT', user:req.user});
 });
 
+//put krte hai sirf update krne ke liye
+//post krte hai for updation or creation
 router.post('/edit/:id', async (req,res)=>{
-    console.log("hello sir");
     const id = req.params.id;
-    // var abc = req.body;
     var blog = await Blog.findByIdAndUpdate(id, {
         title: req.body.title,
         snippet: req.body.snippet,
