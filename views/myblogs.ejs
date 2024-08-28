@@ -18,21 +18,31 @@
         </nav>
         <div class="blogs-content">
             <h2>My Blogs</h2>
-            <% if (blogs.length > 0) { 
+            <% if (blogs && blogs.length > 0) { 
+                let hasUserBlogs = false;
                 blogs.forEach((blog) => {
-                    if(blog.googleID == user.googleID) {%>
-                <div class="blogs"><a class = "single" href="/blogs/<%= blog._id%>">
-                  <h3 class="title"><%= blog.title %></h3>
-                  <p class="snippet"><%= blog.snippet %></p>
-                </a>
+                    if(blog.googleID == user.googleID) { 
+                        hasUserBlogs = true; %>
+                        <div class="blogs">
+                            <a class="single" href="/blogs/<%= blog._id %>">
+                                <h3 class="title"><%= blog.title %></h3>
+                                <p class="snippet"><%= blog.snippet %></p>
+                            </a>
+                        </div>
+                    <% }
+                }); 
+                if (!hasUserBlogs) { %>
+                    <div class="empty">
+                        <p>There are no blogs to display.</p>
+                        <p><br>Click <a href="/blogs/create">here</a> to add a new blog.</p>
+                    </div>
+                <% }
+            } else { %>
+                <div class="empty">
+                    <p>There are no blogs to display.</p>
+                    <p><br>Click <a href="/blogs/create">here</a> to add a new blog.</p>
                 </div>
-                <% }}) %>
-              <% } else { %>
-                <div class = "empty">
-                  <p>There are no blogs to display.</p>
-                  <p><br>Click<a href="/blogs/create"> here </a>to add a new blog. </p>
-                </div>
-              <% } %>
+            <% } %>
         </div>
     
         <%- include('./partials/footer.ejs') %>

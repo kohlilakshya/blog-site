@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/userModel');
-const keys = require('./keys');
+require('dotenv').config();
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -12,34 +12,41 @@ passport.deserializeUser((id, done) => {
         .then((user) => {
             done(null, user);
         })
+        .catch((err) => {
+            done(err, null);
+        });
 });
 
 passport.use(
     new GoogleStrategy({
-        // options for google strategy
-        clientID: keys.google.clientID,
-        clientSecret: keys.google.clientSecret,
+        // Options for Google Strategy
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
         callbackURL: '/auth/google/redirect'
     }, (accessToken, refreshToken, profile, done) => {
-        // passport callback function
-        //asynchronous
-        //User.findAll({})
-        User.findOne({ googleID: profile.id }).then((curUser) => {
-            if (curUser) {
-                console.log("old user is: " + curUser);
-                done(null, curUser);
-                //ab serialize hoga user upar
-            }
-            else {
-                new User({
-                    username: profile.displayName,
-                    googleID: profile.id,
-                    thumbnail: profile.photos[0].value
-                }).save().then((newUser) => {
-                    console.log("new user is: " + newUser);
-                    done(null, newUser);
-                });
-            }
-        })
+        // Passport callback function (asynchronous)
+        User.findOne({ googleID: profile.id })
+            .then((currentUser) => {
+                if (currentUser) {``
+                    console.log("Existing user: " + currentUser);
+                    done(null, currentUser);
+                    // The user will be serialized above
+                } else {
+                    // If the user is not in the database, create a new user
+                    new User({
+                        username: profile.displayName,
+                        googleID: profile.id,
+                        thumbnail: profile.photos[0].value
+                    })
+                    .save()
+                    .then((newUser) => {
+                        console.log("New user created: " + newUser);
+                        done(null, newUser);
+                    });
+                }
+            })
+            .catch((err) => {
+                done(err, null);
+            });
     })
 );
