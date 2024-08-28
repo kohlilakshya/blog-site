@@ -13,7 +13,7 @@ const expressSession = require('express-session');
 
 // Create an Express application
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 // Cookies setup
 app.use(expressSession({
