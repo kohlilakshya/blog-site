@@ -22,7 +22,7 @@ passport.use(
         // Options for Google Strategy
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: '/auth/google/redirect'
+        callbackURL: process.env.CALLBACK_URL
     }, (accessToken, refreshToken, profile, done) => {
         // Passport callback function (asynchronous)
         User.findOne({ googleID: profile.id })
